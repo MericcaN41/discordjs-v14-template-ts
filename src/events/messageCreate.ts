@@ -13,7 +13,7 @@ const event: BotEvent = {
         if (!message.content.startsWith(PREFIX)) return;
         if (message.channel.type !== ChannelType.GuildText) return;
 
-        let args = message.content.substring(process.env.PREFIX.length).split(" ")
+        let args = message.content.substring(PREFIX.length).split(" ")
         let command = message.client.commands.get(args[0])
 
         if (!command) {
