@@ -1,12 +1,16 @@
 import { ChannelType, Message } from "discord.js";
-import { checkPermissions, sendTimedMessage } from "../functions";
+import { checkPermissions, getGuildOption, sendTimedMessage } from "../functions";
 import { BotEvent } from "../types";
 
 const event: BotEvent = {
     name: "messageCreate",
     execute: async (message: Message) => {
         if (!message.member || message.member.user.bot) return;
-        if (!message.content.startsWith(process.env.PREFIX)) return;
+        if (!message.guild) return;
+        let PREFIX = await getGuildOption(message.guild, "prefix")
+        if (!PREFIX) return;
+
+        if (!message.content.startsWith(PREFIX)) return;
         if (message.channel.type !== ChannelType.GuildText) return;
 
         let args = message.content.substring(process.env.PREFIX.length).split(" ")

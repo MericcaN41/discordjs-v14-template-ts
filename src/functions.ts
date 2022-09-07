@@ -1,22 +1,24 @@
 import chalk from "chalk"
-import { GuildMember, PermissionFlagsBits, PermissionResolvable, PermissionsBitField, TextChannel } from "discord.js"
+import { Guild, GuildMember, PermissionFlagsBits, PermissionResolvable, PermissionsBitField, TextChannel } from "discord.js"
+import GuildDB from "./schemas/Guild"
+import { GuildOption } from "./types"
 
 type colorType = "text" | "variable" | "error"
 
 const themeColors = {
     text: "#ff8e4d",
     variable: "#ff624d",
-    error: "#b50d00"
+    error: "#f5426c"
 }
 
-export const getThemeColor = (color : colorType) => Number(`0x${themeColors[color].substring(1)}`)
+export const getThemeColor = (color: colorType) => Number(`0x${themeColors[color].substring(1)}`)
 
 export const color = (color: colorType, message: any) => {
     return chalk.hex(themeColors[color])(message)
 }
 
 export const checkPermissions = (member: GuildMember, permissions: Array<PermissionResolvable>) => {
-    let neededPermissions : PermissionResolvable[] = []
+    let neededPermissions: PermissionResolvable[] = []
     permissions.forEach(permission => {
         if (!member.permissions.has(permission)) neededPermissions.push(permission)
     })
@@ -27,8 +29,21 @@ export const checkPermissions = (member: GuildMember, permissions: Array<Permiss
     })
 }
 
-export const sendTimedMessage = (message: string, channel: TextChannel, duration : number) => {
+export const sendTimedMessage = (message: string, channel: TextChannel, duration: number) => {
     channel.send(message)
-    .then(m => setTimeout(async () => (await channel.messages.fetch(m)).delete(), duration))
+        .then(m => setTimeout(async () => (await channel.messages.fetch(m)).delete(), duration))
     return
+}
+
+export const getGuildOption = async (guild: Guild, option: GuildOption) => {
+    let foundGuild = await GuildDB.findOne({ guildID: guild.id })
+    if (!foundGuild) return null;
+    return foundGuild.options[option]
+}
+
+export const setGuildOption = async (guild: Guild, option: GuildOption, value: any) => {
+    let foundGuild = await GuildDB.findOne({ guildID: guild.id })
+    if (!foundGuild) return null;
+    foundGuild.options[option] = value
+    foundGuild.save()
 }
