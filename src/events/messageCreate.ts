@@ -1,19 +1,23 @@
 import { ChannelType, Message } from "discord.js";
 import { checkPermissions, getGuildOption, sendTimedMessage } from "../functions";
 import { BotEvent } from "../types";
+import mongoose from "mongoose";
 
 const event: BotEvent = {
     name: "messageCreate",
     execute: async (message: Message) => {
         if (!message.member || message.member.user.bot) return;
         if (!message.guild) return;
-        let PREFIX = await getGuildOption(message.guild, "prefix")
-        if (!PREFIX) return;
+        let prefix = process.env.PREFIX
+        if (mongoose.connection.readyState === 1) {
+            let guildPrefix = await getGuildOption(message.guild, "prefix") 
+                if (guildPrefix) prefix = guildPrefix;
+        }
 
-        if (!message.content.startsWith(PREFIX)) return;
+        if (!message.content.startsWith(prefix)) return;
         if (message.channel.type !== ChannelType.GuildText) return;
 
-        let args = message.content.substring(PREFIX.length).split(" ")
+        let args = message.content.substring(prefix.length).split(" ")
         let command = message.client.commands.get(args[0])
 
         if (!command) {
