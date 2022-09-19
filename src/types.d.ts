@@ -15,16 +15,17 @@ export interface Command {
     cooldown?: number,
 }
 
+interface GuildOptions {
+    prefix: string,
+}
 
 export interface IGuild extends mongoose.Document {
     guildID: string,
-    options: {
-        prefix: string
-    }
+    options: GuildOptions
     joinedAt: Date
 }
 
-export type GuildOption = "prefix"
+export type GuildOption = keyof GuildOptions
 export interface BotEvent {
     name: string,
     once?: boolean | false,
