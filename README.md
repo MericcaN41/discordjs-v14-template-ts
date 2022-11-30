@@ -3,7 +3,7 @@
 ## Features
 
 * 🟦 Typescript
-* 🔥 Slash commands
+* 🔥 Slash commands (supports auto complete!)
 * ✉️ Message commands
 * 🕛 Cooldowns
 * 🏴 Detailed Permissions
