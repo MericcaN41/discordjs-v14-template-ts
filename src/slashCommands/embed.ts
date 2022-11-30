@@ -77,17 +77,17 @@ const command: SlashCommand = {
     try {
       await interaction.deferReply({ ephemeral: true });
       const options: { [key: string]: string | number | boolean } = {};
-      if (!interaction.options.data[0].options) return interaction.editReply({ content: "Something went wrong..." });
-      for (let i = 0; i < interaction.options.data[0].options.length; i++) {
-        const element = interaction.options.data[0].options[i];
+      if (!interaction.options) return interaction.editReply({ content: "Something went wrong..." });
+      for (let i = 0; i < interaction.options.data.length; i++) {
+        const element = interaction.options.data[i];
         if (element.name && element.value) options[element.name] = element.value;
       }
       const embed = new EmbedBuilder()
         .setColor(options.color.toString() as ColorResolvable)
         .setTitle(options.title.toString())
         .setDescription(options.description.toString())
+        .setAuthor({ name: interaction.client.user?.username || 'Default Name', iconURL: interaction.client.user?.avatarURL() || undefined })
         .setThumbnail(interaction.client.user?.avatarURL() || null)
-        .setImage(interaction.client.user?.avatarURL() || null)
         .setTimestamp()
         .setFooter({ text: "Test embed message", iconURL: interaction.client.user?.avatarURL() || undefined });
       let selectedTextChannel = interaction.channel?.client.channels.cache.get(options.channel.toString()) as TextChannel
