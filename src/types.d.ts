@@ -38,6 +38,7 @@ export interface IGuild extends mongoose.Document {
 export type GuildOption = keyof GuildOptions;
 export interface BotEvent {
   name: string;
+  enable: boolean;
   once?: boolean | false;
   execute: (...args) => void;
 }
