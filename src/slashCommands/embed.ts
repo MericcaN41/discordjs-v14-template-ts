@@ -1,36 +1,45 @@
-import { SlashCommandBuilder, ChannelType, TextChannel, EmbedBuilder, ColorResolvable, ApplicationCommandChoicesData } from "discord.js"
+import {
+  SlashCommandBuilder,
+  ChannelType,
+  TextChannel,
+  EmbedBuilder,
+  ColorResolvable,
+  ApplicationCommandChoicesData,
+} from "discord.js";
 import { SlashCommand } from "../types";
 
 const command: SlashCommand = {
+  enable: true,
   command: new SlashCommandBuilder()
     .setName("embed")
     .setDescription("Create a new embed message.")
-    .addStringOption(option => {
+    .addStringOption((option) => {
       return option
         .setName("title")
         .setDescription("Title of the embed message")
         .setRequired(true);
     })
-    .addStringOption(option => {
+    .addStringOption((option) => {
       return option
         .setName("description")
         .setDescription("Description of the embed message.")
         .setRequired(true);
     })
-    .addChannelOption(option => {
+    .addChannelOption((option) => {
       return option
         .setName("channel")
         .setDescription("Text channel where the embed message will be sent.")
         .setRequired(true);
     })
-    .addStringOption(option => {
+    .addStringOption((option) => {
       return option
         .setName("color")
-        .setDescription("Select an option or type an hex color, for example: #000000")
+        .setDescription(
+          "Select an option or type an hex color, for example: #000000"
+        )
         .setRequired(true)
         .setAutocomplete(true);
-    })
-  ,
+    }),
   autocomplete: async (interaction) => {
     try {
       const focusedValue = interaction.options.getFocused();
@@ -59,46 +68,55 @@ const command: SlashCommand = {
         { name: "DarkGrey", value: "DarkGrey" },
         { name: "DarkerGrey", value: "DarkerGrey" },
         { name: "LightGrey", value: "LightGrey" },
-        { name: "DarkNavy", value: "DarkNavy" }
+        { name: "DarkNavy", value: "DarkNavy" },
       ];
-      let filtered: { name: string, value: string }[] = []
+      let filtered: { name: string; value: string }[] = [];
       for (let i = 0; i < choices.length; i++) {
         const choice = choices[i];
         if (choice.name.includes(focusedValue)) filtered.push(choice);
       }
-      await interaction.respond(
-        filtered
-      );
+      await interaction.respond(filtered);
     } catch (error) {
-      console.log(`Error: ${error.message}`)
+      console.log(`Error: ${error.message}`);
     }
   },
   execute: async (interaction) => {
     try {
       await interaction.deferReply({ ephemeral: true });
       const options: { [key: string]: string | number | boolean } = {};
-      if (!interaction.options) return interaction.editReply({ content: "Something went wrong..." });
+      if (!interaction.options)
+        return interaction.editReply({ content: "Something went wrong..." });
       for (let i = 0; i < interaction.options.data.length; i++) {
         const element = interaction.options.data[i];
-        if (element.name && element.value) options[element.name] = element.value;
+        if (element.name && element.value)
+          options[element.name] = element.value;
       }
       const embed = new EmbedBuilder()
         .setColor(options.color.toString() as ColorResolvable)
         .setTitle(options.title.toString())
         .setDescription(options.description.toString())
-        .setAuthor({ name: interaction.client.user?.username || 'Default Name', iconURL: interaction.client.user?.avatarURL() || undefined })
+        .setAuthor({
+          name: interaction.client.user?.username || "Default Name",
+          iconURL: interaction.client.user?.avatarURL() || undefined,
+        })
         .setThumbnail(interaction.client.user?.avatarURL() || null)
         .setTimestamp()
-        .setFooter({ text: "Test embed message", iconURL: interaction.client.user?.avatarURL() || undefined });
-      let selectedTextChannel = interaction.channel?.client.channels.cache.get(options.channel.toString()) as TextChannel
+        .setFooter({
+          text: "Test embed message",
+          iconURL: interaction.client.user?.avatarURL() || undefined,
+        });
+      let selectedTextChannel = interaction.channel?.client.channels.cache.get(
+        options.channel.toString()
+      ) as TextChannel;
       selectedTextChannel.send({ embeds: [embed] });
-      return interaction.editReply({ content: "Embed message successfully sent." })
+      return interaction.editReply({
+        content: "Embed message successfully sent.",
+      });
     } catch (error) {
       interaction.editReply({ content: "Something went wrong..." });
     }
-
   },
-  cooldown: 10
-}
+  cooldown: 10,
+};
 
-export default command
+export default command;
