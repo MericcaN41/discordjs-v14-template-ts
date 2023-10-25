@@ -24,6 +24,8 @@ MONGO_DATABASE_NAME=YOUR DATABASE NAME
   npm install -g typescript
   ```
 3) Build the project by running the following command:
+
+`This command will also install the node modules if you haven't installed them.`
 ```js
 npm run build
 ```
