@@ -34,6 +34,18 @@ const event : BotEvent = {
             } catch (error) {
                 console.error(error);
             }
+        } else if (interaction.isModalSubmit()) {
+            const command = interaction.client.slashCommands.get(interaction.customId);
+            if (!command) {
+                console.error(`No command matching ${interaction.customId} was found.`);
+                return;
+            }
+            try {
+                if(!command.modal) return;
+                command.modal(interaction);
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 }
