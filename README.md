@@ -23,10 +23,12 @@ MONGO_DATABASE_NAME=YOUR DATABASE NAME
   ```ts
   npm install -g typescript
   ```
-3) Compile your TypeScript code to JavaScript by running the following command:
+3) Build the project by running the following command:
 ```js
-tsc
+npm run build
 ```
+This command will also install the node modules if you haven't installed them.
+
 4) Once the build is complete it will generated a folder named `build` that contains compiled version of your ts code to js. You can run the following command in your terminal to run the project:
 ```js
 npm start
