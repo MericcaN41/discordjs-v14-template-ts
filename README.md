@@ -29,7 +29,6 @@ MONGO_DATABASE_NAME=YOUR DATABASE NAME
 ```js
 npm run build
 ```
-This command will also install the node modules if you haven't installed them.
 
 4) Once the build is complete it will generated a folder named `build` that contains compiled version of your ts code to js. You can run the following command in your terminal to run the project:
 ```js
