@@ -9,7 +9,7 @@ const command : SlashCommand = {
     execute: async (interaction) => {
         const modal = new ModalBuilder()
             .setCustomId("hobby")
-            .setTitle("What is your hobby?")
+            .setTitle("What is your hobby?");
 
 		const hobbiesInput = new TextInputBuilder()
 			.setCustomId('hobbiesInput')
